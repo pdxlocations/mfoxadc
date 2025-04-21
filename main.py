@@ -42,10 +42,12 @@ def main():
 
         print(f"IN0_Voltage: {str(IN0_voltage)} V, IN1_Voltage: {str(IN1_voltage)} V")
         print(f"CPU_Temp: {str(temperature)} °C")
-        r1 = 300
-        r2 = 300
-        voltage =  IN1_voltage * (r1 + r2) /r2
-        send_device_telemetry(voltage=voltage)
+        # r1 = 300
+        # r2 = 100
+        voltage = round(IN1_voltage * (5.0 / 1.8), 2)
+        battery_percent = min(100, max(0, round((voltage / 4.2) * 100)))
+        
+        send_device_telemetry(voltage=voltage, battery_percent=battery_percent)
         time.sleep(5)
         send_environment_metrics(temperature=temperature)
 
@@ -56,4 +58,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-
