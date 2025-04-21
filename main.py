@@ -2,7 +2,7 @@ import time
 import mudp
 
 ADC_DIR = "/sys/bus/iio/devices/iio:device0"
-TEMP_DIR = "/sys/class/thermal/thermal_zone0"
+TEMP_DIR = "/sys/class/thermal/thermal_zone0/temp"
 
 from mudp import (
     conn,
