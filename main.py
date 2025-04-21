@@ -28,6 +28,16 @@ def read_cpu_temperature():
     # Read CPU temperature from the thermal zone
     with open(TEMP_DIR, 'r') as cpu_temp:
         return int(cpu_temp.read()) / 1000
+    
+OCV = [4190, 4050, 3990, 3890, 3800, 3720, 3630, 3530, 3420, 3300, 3100]
+def show_percent(voltage):
+    for i in range(len(OCV)):
+        if OCV[i] <= voltage:
+            if i == 0:
+                return 100.0
+            else:
+                return 100.0 / (len(OCV) - 1) * (len(OCV) - 1 - i + (voltage - OCV[i]) / (OCV[i - 1] - OCV[i]))
+    return 0
 
 def main():
     print("Press Ctrl+C to quit")
@@ -44,10 +54,12 @@ def main():
         print(f"CPU_Temp: {str(temperature)} °C")
         # r1 = 300
         # r2 = 100
+        # voltage =  IN1_voltage * (r1 + r2) /r2
+
         voltage = round(IN1_voltage * (5.0 / 1.8), 2)
-        battery_percent = min(100, max(0, round((voltage / 4.2) * 100)))
+        battery_level = show_percent(voltage)
         
-        send_device_telemetry(voltage=voltage, battery_level=battery_percent)
+        send_device_telemetry(voltage=voltage, battery_level=battery_level)
         time.sleep(5)
         send_environment_metrics(temperature=temperature)
 
