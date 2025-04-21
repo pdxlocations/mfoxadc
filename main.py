@@ -47,7 +47,7 @@ def main():
         voltage = round(IN1_voltage * (5.0 / 1.8), 2)
         battery_percent = min(100, max(0, round((voltage / 4.2) * 100)))
         
-        send_device_telemetry(voltage=voltage, battery_percent=battery_percent)
+        send_device_telemetry(voltage=voltage, battery_level=battery_percent)
         time.sleep(5)
         send_environment_metrics(temperature=temperature)
 
