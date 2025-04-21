@@ -16,9 +16,6 @@ ADC_DIR = "/sys/bus/iio/devices/iio:device0"
 TEMP_DIR = "/sys/class/thermal/thermal_zone0/temp"
 OCV = [4190, 4050, 3990, 3890, 3800, 3720, 3630, 3530, 3420, 3300, 3100]
 
-# node.node_id = "!596ab32e"
-# node.channel = "MediumFast"
-# node.key = "AQ=="
 conn.setup_multicast(MCAST_GRP, MCAST_PORT)
 
 def read_adc_value(file_path):
@@ -43,8 +40,9 @@ def show_percent(voltage):
 def parse_args():
     parser = argparse.ArgumentParser(description="mfoxadc: Send ADC and temperature telemetry.")
     parser.add_argument("--node-id", type=str, required=True, help="Node ID (e.g., !596ab32e)")
-    parser.add_argument("--channel", type=str, default="LongFast", help="Channel name")
-    parser.add_argument("--key", type=str, default="AQ==", help="Encryption key (Base64)")
+    parser.add_argument("--channel", type=str, default="LongFast", help="Channel name, default is LongFast")
+    parser.add_argument("--key", type=str, default="AQ==", help="Encryption key (Base64), default is AQ==")
+    parser.add_argument("--interval", type=int, default=1800, help="Time between reports in seconds, default is 1800")
     return parser.parse_args()
 
 def main():
@@ -52,6 +50,7 @@ def main():
     node.node_id = args.node_id
     node.channel = args.channel
     node.key = args.key
+    interval = args.interval
 
     print("Press Ctrl+C to quit")
     while True:
@@ -73,7 +72,7 @@ def main():
         time.sleep(5)
         send_environment_metrics(temperature=temperature)
 
-        time.sleep(10)
+        time.sleep(interval)
 
 if __name__ == "__main__":
     try:
