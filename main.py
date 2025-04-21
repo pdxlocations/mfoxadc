@@ -44,7 +44,7 @@ def main():
         print(f"CPU_Temp: {str(temperature)} °C")
         r1 = 300
         r2 = 100
-        voltage =  float(IN1_voltage) * (r1 + r2) /r2
+        voltage =  IN1_voltage * (r1 + r2) /r2
         send_device_telemetry(voltage=voltage)
         time.sleep(5)
         send_environment_metrics(temperature=temperature)
