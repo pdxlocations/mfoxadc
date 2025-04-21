@@ -1,8 +1,7 @@
 import time
 import mudp
+import argparse
 
-ADC_DIR = "/sys/bus/iio/devices/iio:device0"
-TEMP_DIR = "/sys/class/thermal/thermal_zone0/temp"
 
 from mudp import (
     conn,
@@ -13,10 +12,13 @@ from mudp import (
 
 MCAST_GRP = "224.0.0.69"
 MCAST_PORT = 4403
+ADC_DIR = "/sys/bus/iio/devices/iio:device0"
+TEMP_DIR = "/sys/class/thermal/thermal_zone0/temp"
+OCV = [4190, 4050, 3990, 3890, 3800, 3720, 3630, 3530, 3420, 3300, 3100]
 
-node.node_id = "!596ab32e"
-node.channel = "MediumFast"
-node.key = "AQ=="
+# node.node_id = "!596ab32e"
+# node.channel = "MediumFast"
+# node.key = "AQ=="
 conn.setup_multicast(MCAST_GRP, MCAST_PORT)
 
 def read_adc_value(file_path):
@@ -29,7 +31,6 @@ def read_cpu_temperature():
     with open(TEMP_DIR, 'r') as cpu_temp:
         return int(cpu_temp.read()) / 1000
     
-OCV = [4190, 4050, 3990, 3890, 3800, 3720, 3630, 3530, 3420, 3300, 3100]
 def show_percent(voltage):
     for i in range(len(OCV)):
         if OCV[i] <= voltage:
@@ -39,7 +40,19 @@ def show_percent(voltage):
                 return 100.0 / (len(OCV) - 1) * (len(OCV) - 1 - i + (voltage - OCV[i]) / (OCV[i - 1] - OCV[i]))
     return 0
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="mfoxadc: Send ADC and temperature telemetry.")
+    parser.add_argument("--node-id", type=str, required=True, help="Node ID (e.g., !596ab32e)")
+    parser.add_argument("--channel", type=str, default="LongFast", help="Channel name")
+    parser.add_argument("--key", type=str, default="AQ==", help="Encryption key (Base64)")
+    return parser.parse_args()
+
 def main():
+    args = parse_args()
+    node.node_id = args.node_id
+    node.channel = args.channel
+    node.key = args.key
+
     print("Press Ctrl+C to quit")
     while True:
         scale_value = float(read_adc_value(f"{ADC_DIR}/in_voltage_scale"))
@@ -52,9 +65,6 @@ def main():
 
         print(f"IN0_Voltage: {str(IN0_voltage)} V, IN1_Voltage: {str(IN1_voltage)} V")
         print(f"CPU_Temp: {str(temperature)} °C")
-        # r1 = 300
-        # r2 = 100
-        # voltage =  IN1_voltage * (r1 + r2) /r2
 
         voltage = round(IN1_voltage * (5.0 / 1.8), 2)
         battery_level = int(show_percent(voltage * 1000))
