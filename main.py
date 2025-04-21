@@ -26,7 +26,7 @@ def read_adc_value(file_path):
     
 def read_cpu_temperature():
     # Read CPU temperature from the thermal zone
-    with open('TEMP_DIR', 'r') as cpu_temp:
+    with open(TEMP_DIR, 'r') as cpu_temp:
         return int(cpu_temp.read()) / 1000
 
 def main():
