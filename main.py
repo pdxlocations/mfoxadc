@@ -57,7 +57,7 @@ def main():
         # voltage =  IN1_voltage * (r1 + r2) /r2
 
         voltage = round(IN1_voltage * (5.0 / 1.8), 2)
-        battery_level = show_percent(voltage)
+        battery_level = show_percent(voltage * 1000)
         
         send_device_telemetry(voltage=voltage, battery_level=battery_level)
         time.sleep(5)
