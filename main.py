@@ -43,7 +43,7 @@ def main():
         print(f"IN0_Voltage: {str(IN0_voltage)} V, IN1_Voltage: {str(IN1_voltage)} V")
         print(f"CPU_Temp: {str(temperature)} °C")
         r1 = 300
-        r2 = 100
+        r2 = 300
         voltage =  IN1_voltage * (r1 + r2) /r2
         send_device_telemetry(voltage=voltage)
         time.sleep(5)
