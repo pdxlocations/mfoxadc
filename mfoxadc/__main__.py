@@ -1,7 +1,5 @@
 import time
-import mudp
 import argparse
-
 
 from mudp import conn, node, send_device_telemetry, send_environment_metrics
 
