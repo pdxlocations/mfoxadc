@@ -15,7 +15,7 @@ Connect your power source through a voltage divider to GPIO4_C1/SARADC_IN1. Pin 
 # Command Line
 
 ```bash
-mfoxadc --node-id "!abcd1234"
+mfoxadc --node-id '!abcd1234'
 ```
 
 # Additional Arguments:
