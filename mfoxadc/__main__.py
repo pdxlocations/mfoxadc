@@ -1,9 +1,9 @@
 import time
-import mfoxadc
+import mudp
 import argparse
 
 
-from mfoxadc import conn, node, send_device_telemetry, send_environment_metrics
+from mudp import conn, node, send_device_telemetry, send_environment_metrics
 
 MCAST_GRP = "224.0.0.69"
 MCAST_PORT = 4403
